@@ -1,4 +1,4 @@
-USE DATABASE survey_agg_demo;
+USE DATABASE SURVEY_DB;
 USE SCHEMA survey_agg;
 
 TRUNCATE TABLE IF EXISTS brands_mapping;

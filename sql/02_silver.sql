@@ -1,4 +1,4 @@
-USE DATABASE survey_agg_demo;
+USE DATABASE SURVEY_DB;
 USE SCHEMA survey_agg;
 
 CREATE OR REPLACE VIEW surveys_clean AS

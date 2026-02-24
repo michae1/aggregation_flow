@@ -1,4 +1,4 @@
-USE DATABASE survey_agg_demo;
+USE DATABASE SURVEY_DB;
 USE SCHEMA survey_agg;
 
 CREATE OR REPLACE ROW ACCESS POLICY filter_brands AS (brand_id VARCHAR)

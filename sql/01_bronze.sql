@@ -1,8 +1,4 @@
-CREATE DATABASE IF NOT EXISTS survey_agg_demo;
-USE DATABASE survey_agg_demo;
-CREATE SCHEMA IF NOT EXISTS survey_agg;
-USE SCHEMA survey_agg;
-
+-- DDL for raw tables
 CREATE OR REPLACE TABLE surveys_raw (
   id           VARCHAR(64) NOT NULL,
   geo_point    GEOGRAPHY NOT NULL,
