@@ -10,7 +10,7 @@ const statement = snowflake.createStatement;
 
 const aggHashStmt = statement({
   sqlText: `
-    SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS actual_hash
+    SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS ACTUAL_HASH
     FROM (
       SELECT geo_h3, geo_region, sector, brand_id, response_count, avg_score
       FROM GOLD.agg_geo_sector_brand
@@ -19,7 +19,7 @@ const aggHashStmt = statement({
 });
 const aggHash = aggHashStmt.execute();
 aggHash.next();
-const actualHash = aggHash.getColumnValue('actual_hash');
+const actualHash = aggHash.getColumnValue('ACTUAL_HASH');
 
 const expectedHashStmt = statement({
   sqlText: `
@@ -38,7 +38,7 @@ const expectedHashStmt = statement({
       FROM SILVER.surveys_clean
       GROUP BY 1, 2, 3, 4
     )
-    SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS expected_hash
+    SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS EXPECTED_HASH
     FROM (
       SELECT *
       FROM groups
@@ -47,7 +47,7 @@ const expectedHashStmt = statement({
 });
 const expectHashCursor = expectedHashStmt.execute();
 expectHashCursor.next();
-const expectedHash = expectHashCursor.getColumnValue('expected_hash');
+const expectedHash = expectHashCursor.getColumnValue('EXPECTED_HASH');
 
 if (actualHash !== expectedHash) {
   throw new Error(`Hash contract mismatch: actual=${actualHash}, expected=${expectedHash}`);
