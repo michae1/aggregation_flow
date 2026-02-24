@@ -63,14 +63,14 @@ SET user_brands = 'brand_0';
 
 SELECT CASE
   WHEN (SELECT COUNT(*) FROM GOLD.gold_view) =
-       (SELECT COUNT(*) FROM GOLD.agg_geo_sector_brand WHERE brand_id = 'brand_0') THEN 'rap-filter-passed'
+       (SELECT COUNT(*) FROM GOLD.agg_geo_sector_brand WHERE brand_id = 'brand_0') THEN 1
   ELSE (SELECT 1/0)
-END AS rap_status;
+END AS rap_filter_status;
 
 UNSET user_brands;
 
 SELECT CASE
   WHEN (SELECT COUNT(*) FROM GOLD.gold_view) =
-       (SELECT COUNT(*) FROM GOLD.agg_geo_sector_brand) THEN 'rap-default-passed'
+       (SELECT COUNT(*) FROM GOLD.agg_geo_sector_brand) THEN 1
   ELSE (SELECT 1/0)
-END AS rap_default;
+END AS rap_default_status;
