@@ -13,6 +13,7 @@ FROM (
   FROM TABLE(GENERATOR(ROWCOUNT => 5))
 );
 
+INSERT INTO BRONZE.surveys_raw (id, geo_point, sector, brand_id, response_score, response_date)
 WITH mock_surveys AS (
   SELECT
     MD5(TO_VARCHAR(seq)) AS id,
@@ -40,7 +41,6 @@ WITH mock_surveys AS (
     FROM TABLE(GENERATOR(ROWCOUNT => 900))
   ) gen
 )
-INSERT INTO BRONZE.surveys_raw (id, geo_point, sector, brand_id, response_score, response_date)
 SELECT * FROM mock_surveys;
 
 INSERT INTO SILVER.brands_mapping (client_id, role, allowed_brands)
