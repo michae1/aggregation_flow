@@ -2,7 +2,7 @@ USE DATABASE SURVEY_DB;
 USE SCHEMA GOLD;
 
 CREATE OR REPLACE TASK daily_gold_refresh
-  WAREHOUSE = survey_agg_wh
+  WAREHOUSE = test_wh
   SCHEDULE = 'USING CRON 0 2 * * * UTC'
 AS
   ALTER DYNAMIC TABLE agg_geo_sector_brand REFRESH;

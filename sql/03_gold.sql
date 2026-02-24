@@ -3,7 +3,7 @@ USE SCHEMA GOLD;
 
 CREATE OR REPLACE DYNAMIC TABLE agg_geo_sector_brand
   TARGET_LAG = '1 day'
-  WAREHOUSE = survey_agg_wh
+  WAREHOUSE = test_wh
 AS
 SELECT
   H3_FROMGEOG(geo_point, 6) AS geo_h3,

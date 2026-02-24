@@ -1,5 +1,4 @@
 -- Master deployment script. Run with SnowSQL/SnowCLI to build the stack.
-CREATE WAREHOUSE IF NOT EXISTS survey_agg_wh WITH WAREHOUSE_SIZE = 'XSMALL' AUTO_SUSPEND = 60 AUTO_RESUME = TRUE;
 USE DATABASE SURVEY_DB;
 
 !source sql/01_bronze.sql
