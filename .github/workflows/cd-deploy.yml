@@ -39,4 +39,4 @@ jobs:
             --authenticator SNOWFLAKE_JWT \
             --private-key-path ${{ runner.temp }}/snowflake_prod_key.pem \
             --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" \
-            --file deploy.sql
+            --filename deploy.sql

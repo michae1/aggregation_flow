@@ -38,7 +38,7 @@ jobs:
             --schema $SNOWFLAKE_SCHEMA \
             --authenticator SNOWFLAKE_JWT \
             --private-key-path ${{ runner.temp }}/snowflake_key.pem \
-            --file deploy.sql
+            --filename deploy.sql
       - name: Run CI test queries
         run: |
           snow sql --account $SNOWFLAKE_ACCOUNT \
@@ -50,4 +50,4 @@ jobs:
             --authenticator SNOWFLAKE_JWT \
             --private-key-path ${{ runner.temp }}/snowflake_key.pem \
             --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" \
-            --file tests/test_queries.sql
+            --filename tests/test_queries.sql
