@@ -34,8 +34,8 @@ jobs:
             --warehouse $SNOWFLAKE_WAREHOUSE \
             --database $SNOWFLAKE_DATABASE \
             --schema $SNOWFLAKE_SCHEMA \
+            --authenticator SNOWFLAKE_JWT \
             --private-key-path ${{ runner.temp }}/snowflake_key.pem \
-            --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" \
             --file deploy.sql
       - name: Run CI test queries
         run: |
@@ -45,6 +45,7 @@ jobs:
             --warehouse $SNOWFLAKE_WAREHOUSE \
             --database $SNOWFLAKE_DATABASE \
             --schema $SNOWFLAKE_SCHEMA \
+            --authenticator SNOWFLAKE_JWT \
             --private-key-path ${{ runner.temp }}/snowflake_key.pem \
             --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" \
             --file tests/test_queries.sql
