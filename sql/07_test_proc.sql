@@ -25,7 +25,7 @@ const expectedHashStmt = statement({
   sqlText: `
     WITH groups AS (
       SELECT
-        H3_FROMGEOG(geo_point, 6) AS geo_h3,
+        H3_POINT_TO_CELL(geo_point, 6) AS geo_h3,
         CASE
           WHEN ST_INTERSECTS(geo_point, ST_GEOGFROMTEXT('POLYGON((-180 45, -180 90, 180 90, 180 45, -180 45))')) THEN 'north'
           WHEN ST_INTERSECTS(geo_point, ST_GEOGFROMTEXT('POLYGON((-180 -90, -180 45, 180 45, 180 -90, -180 -90))')) THEN 'global'

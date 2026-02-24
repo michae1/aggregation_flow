@@ -6,7 +6,7 @@ CREATE OR REPLACE DYNAMIC TABLE agg_geo_sector_brand
   WAREHOUSE = test_wh
 AS
 SELECT
-  H3_FROMGEOG(geo_point, 6) AS geo_h3,
+  H3_POINT_TO_CELL(geo_point, 6) AS geo_h3,
   CASE
     WHEN ST_INTERSECTS(geo_point, ST_GEOGFROMTEXT('POLYGON((-180 45, -180 90, 180 90, 180 45, -180 45))')) THEN 'north'
     WHEN ST_INTERSECTS(geo_point, ST_GEOGFROMTEXT('POLYGON((-180 -90, -180 45, 180 45, 180 -90, -180 -90))')) THEN 'global'
