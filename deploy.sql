@@ -1,5 +1,4 @@
 -- Master deployment script. Run with SnowSQL/SnowCLI to build the stack.
-USE ROLE ACCOUNTADMIN;
 USE DATABASE survey_agg_demo;
 USE SCHEMA survey_agg;
 

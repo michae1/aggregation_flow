@@ -1,4 +1,3 @@
-USE ROLE ACCOUNTADMIN;
 USE DATABASE survey_agg_demo;
 USE SCHEMA survey_agg;
 
