@@ -33,4 +33,4 @@ jobs:
           snow sql -x --account "$SNOWFLAKE_ACCOUNT" --username "$SNOWFLAKE_USER" --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "SURVEY_DB" --authenticator SNOWFLAKE_JWT --private-key-path "${{ runner.temp }}/snowflake_key.pem" --filename deploy.sql
       - name: Run CI test queries
         run: |
-          snow sql -x --account "$SNOWFLAKE_ACCOUNT" --username "$SNOWFLAKE_USER" --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "SURVEY_DB" --schema "GOLD" --authenticator SNOWFLAKE_JWT --private-key-path "${{ runner.temp }}/snowflake_key.pem" --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" --filename tests/test_queries.sql
+          snow sql -x --account "$SNOWFLAKE_ACCOUNT" --username "$SNOWFLAKE_USER" --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "SURVEY_DB" --schema "GOLD" --authenticator SNOWFLAKE_JWT --private-key-path "${{ runner.temp }}/snowflake_key.pem" --filename tests/test_queries.sql
