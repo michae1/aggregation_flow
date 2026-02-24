@@ -1,0 +1,50 @@
+name: CI Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+      SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - name: Install SnowCLI
+        run: pip install --upgrade snowcli
+      - name: Decode Snowflake private key
+        run: |
+          echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY }}" | base64 --decode > ${{ runner.temp }}/snowflake_key.pem
+      - name: Deploy objects
+        run: |
+          snow sql --account $SNOWFLAKE_ACCOUNT \
+            --username $SNOWFLAKE_USER \
+            --role $SNOWFLAKE_ROLE \
+            --warehouse $SNOWFLAKE_WAREHOUSE \
+            --database $SNOWFLAKE_DATABASE \
+            --schema $SNOWFLAKE_SCHEMA \
+            --private-key-path ${{ runner.temp }}/snowflake_key.pem \
+            --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" \
+            --file deploy.sql
+      - name: Run CI test queries
+        run: |
+          snow sql --account $SNOWFLAKE_ACCOUNT \
+            --username $SNOWFLAKE_USER \
+            --role $SNOWFLAKE_ROLE \
+            --warehouse $SNOWFLAKE_WAREHOUSE \
+            --database $SNOWFLAKE_DATABASE \
+            --schema $SNOWFLAKE_SCHEMA \
+            --private-key-path ${{ runner.temp }}/snowflake_key.pem \
+            --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" \
+            --file tests/test_queries.sql

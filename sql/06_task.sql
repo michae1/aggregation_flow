@@ -1,0 +1,13 @@
+USE ROLE ACCOUNTADMIN;
+USE DATABASE survey_agg_demo;
+USE SCHEMA survey_agg;
+
+CREATE OR REPLACE WAREHOUSE IF NOT EXISTS survey_agg_wh WITH WAREHOUSE_SIZE = 'XSMALL';
+
+CREATE OR REPLACE TASK daily_gold_refresh
+  WAREHOUSE = survey_agg_wh
+  SCHEDULE = 'USING CRON 0 2 * * * UTC'
+AS
+  ALTER DYNAMIC TABLE agg_geo_sector_brand REFRESH;
+
+ALTER TASK daily_gold_refresh RESUME;
