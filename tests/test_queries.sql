@@ -59,7 +59,7 @@ ALTER DYNAMIC TABLE GOLD.agg_geo_sector_brand REFRESH;
 
 CALL GOLD.test_pipeline();
 
-ALTER SESSION SET TAG user_brands = 'brand_0';
+SET user_brands = 'brand_0';
 
 SELECT CASE
   WHEN (SELECT COUNT(*) FROM GOLD.gold_view) =
@@ -67,7 +67,7 @@ SELECT CASE
   ELSE (SELECT 1/0)
 END AS rap_status;
 
-ALTER SESSION UNSET TAG user_brands;
+UNSET user_brands;
 
 SELECT CASE
   WHEN (SELECT COUNT(*) FROM GOLD.gold_view) =
