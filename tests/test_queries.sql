@@ -44,9 +44,9 @@ INSERT INTO BRONZE.surveys_raw (id, geo_point, sector, brand_id, response_score,
 SELECT * FROM mock_surveys;
 
 INSERT INTO SILVER.brands_mapping (client_id, role, allowed_brands)
-SELECT CURRENT_CLIENT(), CURRENT_ROLE(), ARRAY_CONSTRUCT('brand_0', 'brand_1')
+SELECT CURRENT_USER(), CURRENT_ROLE(), ARRAY_CONSTRUCT('brand_0', 'brand_1')
 WHERE NOT EXISTS (
-  SELECT 1 FROM SILVER.brands_mapping WHERE client_id = CURRENT_CLIENT()
+  SELECT 1 FROM SILVER.brands_mapping WHERE client_id = CURRENT_USER()
 );
 
 INSERT INTO SILVER.brands_mapping (client_id, role, allowed_brands)

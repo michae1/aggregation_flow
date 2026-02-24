@@ -4,12 +4,12 @@ USE SCHEMA GOLD;
 CREATE OR REPLACE ROW ACCESS POLICY filter_brands AS (brand_id VARCHAR)
 RETURNS BOOLEAN ->
   CASE
-    WHEN CURRENT_TAG('user_brands') IS NOT NULL THEN
-      ARRAY_CONTAINS(SPLIT(CURRENT_TAG('user_brands'), ','), brand_id)
+    WHEN SYSTEM$GET_TAG_ON_SESSION('user_brands') IS NOT NULL THEN
+      ARRAY_CONTAINS(SPLIT(SYSTEM$GET_TAG_ON_SESSION('user_brands'), ','), brand_id)
     WHEN EXISTS (
       SELECT 1
       FROM SILVER.brands_mapping m
-      WHERE m.client_id = CURRENT_CLIENT()
+      WHERE m.client_id = CURRENT_USER()
         AND ARRAY_CONTAINS(m.allowed_brands, brand_id)
     ) THEN TRUE
     WHEN EXISTS (

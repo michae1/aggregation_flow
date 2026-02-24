@@ -1,7 +1,10 @@
 USE DATABASE SURVEY_DB;
 USE SCHEMA GOLD;
 
-CREATE OR REPLACE DYNAMIC TABLE agg_geo_sector_brand AS
+CREATE OR REPLACE DYNAMIC TABLE agg_geo_sector_brand
+  TARGET_LAG = '1 day'
+  WAREHOUSE = survey_agg_wh
+AS
 SELECT
   H3_FROMGEOG(geo_point, 6) AS geo_h3,
   CASE
@@ -14,4 +17,4 @@ SELECT
   COUNT(*) AS response_count,
   AVG(response_score) AS avg_score
 FROM SILVER.surveys_clean
-GROUP BY 1,2,3,4;
+GROUP BY geo_h3, geo_region, sector, brand_id;
