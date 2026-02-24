@@ -36,7 +36,7 @@ const expectedHashStmt = statement({
         COUNT(*) AS response_count,
         AVG(response_score) AS avg_score
       FROM SILVER.surveys_clean
-      GROUP BY geo_h3, geo_region, sector, brand_id
+      GROUP BY 1, 2, 3, 4
     )
     SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS expected_hash
     FROM (
