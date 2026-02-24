@@ -48,7 +48,7 @@ snow sql --file deploy.sql
    ```bash
    snow sql --file tests/test_queries.sql
    ```
-3. Скрипт генерує mock-дані за допомогою `GENERATOR`, виконує `ALTER DYNAMIC TABLE ... REFRESH`, викликає `CALL survey_agg.test_pipeline()`, тестує `RAP` через `SESSION_TAG('user_brands')`.
+3. Скрипт генерує mock-дані за допомогою `GENERATOR`, виконує `ALTER DYNAMIC TABLE ... REFRESH`, викликає `CALL GOLD.test_pipeline()`, тестує `RAP` через `SET user_brands = '...'`.
 
 ## CI/CD (GitHub Actions)
 

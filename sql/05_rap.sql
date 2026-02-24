@@ -4,9 +4,9 @@ USE SCHEMA GOLD;
 CREATE OR REPLACE ROW ACCESS POLICY filter_brands AS (brand_id VARCHAR)
 RETURNS BOOLEAN ->
   CASE
-    -- check session variable if exists
-    WHEN SYSTEM$GET_SESSION_VARIABLE('user_brands') IS NOT NULL THEN
-      ARRAY_CONTAINS(brand_id::VARIANT, SPLIT(SYSTEM$GET_SESSION_VARIABLE('user_brands'), ','))
+    -- check session variable if exists (MUST be uppercase)
+    WHEN GETVARIABLE('USER_BRANDS') IS NOT NULL THEN
+      ARRAY_CONTAINS(brand_id::VARIANT, SPLIT(GETVARIABLE('USER_BRANDS'), ','))
     WHEN EXISTS (
       SELECT 1
       FROM SILVER.brands_mapping m
