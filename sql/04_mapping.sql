@@ -1,5 +1,5 @@
 USE DATABASE SURVEY_DB;
-USE SCHEMA survey_agg;
+USE SCHEMA SILVER;
 
 CREATE OR REPLACE TABLE brands_mapping (
   client_id      VARCHAR(64),

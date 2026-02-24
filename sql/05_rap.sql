@@ -1,5 +1,5 @@
 USE DATABASE SURVEY_DB;
-USE SCHEMA survey_agg;
+USE SCHEMA GOLD;
 
 CREATE OR REPLACE ROW ACCESS POLICY filter_brands AS (brand_id VARCHAR)
 RETURNS BOOLEAN ->
@@ -8,13 +8,13 @@ RETURNS BOOLEAN ->
       ARRAY_CONTAINS(SPLIT(CURRENT_TAG('user_brands'), ','), brand_id)
     WHEN EXISTS (
       SELECT 1
-      FROM brands_mapping m
+      FROM SILVER.brands_mapping m
       WHERE m.client_id = CURRENT_CLIENT()
         AND ARRAY_CONTAINS(m.allowed_brands, brand_id)
     ) THEN TRUE
     WHEN EXISTS (
       SELECT 1
-      FROM brands_mapping m
+      FROM SILVER.brands_mapping m
       WHERE m.role = CURRENT_ROLE()
         AND ARRAY_CONTAINS(m.allowed_brands, brand_id)
     ) THEN TRUE

@@ -1,5 +1,5 @@
 USE DATABASE SURVEY_DB;
-USE SCHEMA survey_agg;
+USE SCHEMA GOLD;
 
 CREATE OR REPLACE PROCEDURE test_pipeline()
 RETURNS STRING
@@ -13,7 +13,7 @@ const aggHashStmt = statement({
     SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS actual_hash
     FROM (
       SELECT geo_h3, geo_region, sector, brand_id, response_count, avg_score
-      FROM agg_geo_sector_brand
+      FROM GOLD.agg_geo_sector_brand
       ORDER BY geo_h3, sector, brand_id
     )`
 });
@@ -35,7 +35,7 @@ const expectedHashStmt = statement({
         brand_id,
         COUNT(*) AS response_count,
         AVG(response_score) AS avg_score
-      FROM surveys_clean
+      FROM SILVER.surveys_clean
       GROUP BY 1,2,3,4
     )
     SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS expected_hash
@@ -53,12 +53,12 @@ if (actualHash !== expectedHash) {
   throw new Error(`Hash contract mismatch: actual=${actualHash}, expected=${expectedHash}`);
 }
 
-const rawCountStmt = statement({ sqlText: `SELECT COUNT(*) total_raw FROM surveys_clean` });
+const rawCountStmt = statement({ sqlText: `SELECT COUNT(*) total_raw FROM SILVER.surveys_clean` });
 const rawCountCursor = rawCountStmt.execute();
 rawCountCursor.next();
 const rawCount = rawCountCursor.getColumnValue('TOTAL_RAW');
 
-const aggSumStmt = statement({ sqlText: `SELECT SUM(response_count) total_agg FROM agg_geo_sector_brand` });
+const aggSumStmt = statement({ sqlText: `SELECT SUM(response_count) total_agg FROM GOLD.agg_geo_sector_brand` });
 const aggSumCursor = aggSumStmt.execute();
 aggSumCursor.next();
 const aggSum = aggSumCursor.getColumnValue('TOTAL_AGG');

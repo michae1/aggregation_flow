@@ -1,3 +1,6 @@
+USE DATABASE SURVEY_DB;
+USE SCHEMA BRONZE;
+
 -- DDL for raw tables
 CREATE OR REPLACE TABLE surveys_raw (
   id           VARCHAR(64) NOT NULL,

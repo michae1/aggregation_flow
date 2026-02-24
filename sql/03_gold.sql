@@ -1,5 +1,5 @@
 USE DATABASE SURVEY_DB;
-USE SCHEMA survey_agg;
+USE SCHEMA GOLD;
 
 CREATE OR REPLACE DYNAMIC TABLE agg_geo_sector_brand AS
 SELECT
@@ -13,5 +13,5 @@ SELECT
   brand_id,
   COUNT(*) AS response_count,
   AVG(response_score) AS avg_score
-FROM surveys_clean
+FROM SILVER.surveys_clean
 GROUP BY 1,2,3,4;
