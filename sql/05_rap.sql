@@ -1,6 +1,9 @@
 USE DATABASE SURVEY_DB;
 USE SCHEMA GOLD;
 
+-- Drop dependent view first to allow policy replacement
+DROP VIEW IF EXISTS gold_view;
+
 CREATE OR REPLACE ROW ACCESS POLICY filter_brands AS (brand_id VARCHAR)
 RETURNS BOOLEAN ->
   CASE
