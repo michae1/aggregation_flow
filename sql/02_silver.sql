@@ -9,7 +9,7 @@ SELECT
   brand_id,
   response_score,
   response_date,
-  TO_VARIANT(geo_point) AS geo_variant,
+  PARSE_JSON(ST_ASJSON(geo_point)) AS geo_variant,
   TRIM(UPPER(sector)) AS normalized_sector
 FROM BRONZE.surveys_raw
 WHERE sector IS NOT NULL
