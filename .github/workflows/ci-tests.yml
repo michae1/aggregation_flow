@@ -30,7 +30,7 @@ jobs:
           printf "%s" "${{ secrets.SNOWFLAKE_PRIVATE_KEY }}" | base64 --decode > ${{ runner.temp }}/snowflake_key.pem
       - name: Deploy objects
         run: |
-          snow sql -x --account "$SNOWFLAKE_ACCOUNT" --username "$SNOWFLAKE_USER" --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --authenticator SNOWFLAKE_JWT --private-key-path "${{ runner.temp }}/snowflake_key.pem" --filename deploy.sql
+          snow sql -x --account "$SNOWFLAKE_ACCOUNT" --username "$SNOWFLAKE_USER" --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "SURVEY_DB" --schema "survey_agg" --authenticator SNOWFLAKE_JWT --private-key-path "${{ runner.temp }}/snowflake_key.pem" --filename deploy.sql
       - name: Run CI test queries
         run: |
           snow sql -x --account "$SNOWFLAKE_ACCOUNT" --username "$SNOWFLAKE_USER" --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "SURVEY_DB" --schema "survey_agg" --authenticator SNOWFLAKE_JWT --private-key-path "${{ runner.temp }}/snowflake_key.pem" --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" --filename tests/test_queries.sql

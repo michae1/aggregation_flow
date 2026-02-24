@@ -1,7 +1,4 @@
 -- Master deployment script. Run with SnowSQL/SnowCLI to build the stack.
-CREATE DATABASE IF NOT EXISTS SURVEY_DB;
-CREATE SCHEMA IF NOT EXISTS SURVEY_DB.survey_agg;
-
 USE DATABASE SURVEY_DB;
 USE SCHEMA survey_agg;
 
