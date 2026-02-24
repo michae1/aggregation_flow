@@ -6,5 +6,4 @@ USE DATABASE SURVEY_DB;
 !source sql/03_gold.sql
 !source sql/04_mapping.sql
 !source sql/05_rap.sql
-!source sql/06_task.sql
 !source sql/07_test_proc.sql
