@@ -22,10 +22,12 @@ jobs:
         with:
           python-version: 3.11
       - name: Install SnowCLI
-        run: pip install --upgrade snowcli
+        run: |
+          python -m pip install --upgrade pip
+          pip install snowflake-cli
       - name: Decode prod private key
         run: |
-          echo "${{ secrets.SNOWFLAKE_PROD_PRIVATE_KEY }}" | base64 --decode > ${{ runner.temp }}/snowflake_prod_key.pem
+          printf "%s" "${{ secrets.SNOWFLAKE_PROD_PRIVATE_KEY }}" | base64 --decode > ${{ runner.temp }}/snowflake_prod_key.pem
       - name: Deploy to production
         run: |
           snow sql --account $SNOWFLAKE_ACCOUNT \
