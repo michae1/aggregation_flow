@@ -1,20 +1,19 @@
 name: CD Deploy
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_PROD_ACCOUNT }}
-      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_PROD_USER }}
-      SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_PROD_ROLE }}
-      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_PROD_WAREHOUSE }}
-      SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_PROD_DATABASE }}
-      SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_PROD_SCHEMA }}
-      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PROD_PRIVATE_KEY_PASSPHRASE }}
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+      SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Python 3.11
@@ -25,9 +24,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install snowflake-cli
-      - name: Decode prod private key
+      - name: Decode private key
         run: |
-          printf "%s" "${{ secrets.SNOWFLAKE_PROD_PRIVATE_KEY }}" | base64 --decode > ${{ runner.temp }}/snowflake_prod_key.pem
+          printf "%s" "${{ secrets.SNOWFLAKE_PRIVATE_KEY }}" | base64 --decode > ${{ runner.temp }}/snowflake_key.pem
       - name: Deploy to production
         run: |
-          snow sql -x --account "$SNOWFLAKE_ACCOUNT" --username "$SNOWFLAKE_USER" --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "SURVEY_DB" --authenticator SNOWFLAKE_JWT --private-key-path "${{ runner.temp }}/snowflake_prod_key.pem" --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" --filename deploy.sql
+          snow sql -x --account "$SNOWFLAKE_ACCOUNT" --username "$SNOWFLAKE_USER" --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "IMPRESSIONS_DB" --authenticator SNOWFLAKE_JWT --private-key-path "${{ runner.temp }}/snowflake_key.pem" --filename deploy.sql

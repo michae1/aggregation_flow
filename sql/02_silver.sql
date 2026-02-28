@@ -1,22 +1,22 @@
-USE DATABASE SURVEY_DB;
+USE DATABASE IMPRESSIONS_DB;
 USE SCHEMA SILVER;
 
-CREATE OR REPLACE VIEW surveys_clean AS
+CREATE OR REPLACE VIEW impressions_clean AS
 SELECT
   id,
   geo_point,
-  sector,
-  brand_id,
-  response_score,
-  response_date,
+  category,
+  site_id,
+  view_count,
+  event_date,
   ST_ASWKB(geo_point) AS geo_variant,
-  TRIM(UPPER(sector)) AS normalized_sector
-FROM BRONZE.surveys_raw
-WHERE sector IS NOT NULL
-  AND response_score BETWEEN 0 AND 10;
+  TRIM(UPPER(category)) AS normalized_category
+FROM BRONZE.impressions_raw
+WHERE category IS NOT NULL
+  AND view_count > 0;
 
-CREATE OR REPLACE VIEW brands_clean AS
+CREATE OR REPLACE VIEW sites_clean AS
 SELECT
   id,
   INITCAP(name) AS display_name
-FROM BRONZE.brands_raw;
+FROM BRONZE.sites_raw;

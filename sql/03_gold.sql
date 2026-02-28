@@ -1,7 +1,7 @@
-USE DATABASE SURVEY_DB;
+USE DATABASE IMPRESSIONS_DB;
 USE SCHEMA GOLD;
 
-CREATE OR REPLACE DYNAMIC TABLE agg_geo_sector_brand
+CREATE OR REPLACE DYNAMIC TABLE agg_geo_category_site
   TARGET_LAG = '1 day'
   WAREHOUSE = test_wh
 AS
@@ -12,9 +12,9 @@ SELECT
     WHEN ST_INTERSECTS(geo_point, ST_GEOGFROMTEXT('POLYGON((-180 -90, -180 45, 180 45, 180 -90, -180 -90))')) THEN 'global'
     ELSE 'unknown'
   END AS geo_region,
-  normalized_sector AS sector,
-  brand_id,
-  COUNT(*) AS response_count,
-  AVG(response_score) AS avg_score
-FROM SILVER.surveys_clean
+  normalized_category AS category,
+  site_id,
+  COUNT(*) AS impression_count,
+  SUM(view_count) AS total_views
+FROM SILVER.impressions_clean
 GROUP BY 1, 2, 3, 4;

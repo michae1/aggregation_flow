@@ -1,5 +1,5 @@
 -- Master deployment script. Run with SnowSQL/SnowCLI to build the stack.
-USE DATABASE SURVEY_DB;
+USE DATABASE IMPRESSIONS_DB;
 
 !source sql/01_bronze.sql
 !source sql/02_silver.sql

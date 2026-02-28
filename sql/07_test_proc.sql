@@ -1,4 +1,4 @@
-USE DATABASE SURVEY_DB;
+USE DATABASE IMPRESSIONS_DB;
 USE SCHEMA GOLD;
 
 CREATE OR REPLACE PROCEDURE test_pipeline()
@@ -10,11 +10,11 @@ const statement = snowflake.createStatement;
 
 const aggHashStmt = statement({
   sqlText: `
-    SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS ACTUAL_HASH
+    SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, category, site_id, impression_count, total_views))) AS ACTUAL_HASH
     FROM (
-      SELECT geo_h3, geo_region, sector, brand_id, response_count, avg_score
-      FROM GOLD.agg_geo_sector_brand
-      ORDER BY geo_h3, sector, brand_id
+      SELECT geo_h3, geo_region, category, site_id, impression_count, total_views
+      FROM GOLD.agg_geo_category_site
+      ORDER BY geo_h3, category, site_id
     )`
 });
 const aggHash = aggHashStmt.execute();
@@ -31,18 +31,18 @@ const expectedHashStmt = statement({
           WHEN ST_INTERSECTS(geo_point, ST_GEOGFROMTEXT('POLYGON((-180 -90, -180 45, 180 45, 180 -90, -180 -90))')) THEN 'global'
           ELSE 'unknown'
         END AS geo_region,
-        normalized_sector AS sector,
-        brand_id,
-        COUNT(*) AS response_count,
-        AVG(response_score) AS avg_score
-      FROM SILVER.surveys_clean
+        normalized_category AS category,
+        site_id,
+        COUNT(*) AS impression_count,
+        SUM(view_count) AS total_views
+      FROM SILVER.impressions_clean
       GROUP BY 1, 2, 3, 4
     )
-    SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, sector, brand_id, response_count, ROUND(avg_score,5)))) AS EXPECTED_HASH
+    SELECT HASH_AGG(TO_VARIANT(ARRAY_CONSTRUCT(geo_h3, geo_region, category, site_id, impression_count, total_views))) AS EXPECTED_HASH
     FROM (
       SELECT *
       FROM groups
-      ORDER BY geo_h3, sector, brand_id
+      ORDER BY geo_h3, category, site_id
     )`
 });
 const expectHashCursor = expectedHashStmt.execute();
@@ -53,12 +53,12 @@ if (actualHash !== expectedHash) {
   throw new Error(`Hash contract mismatch: actual=${actualHash}, expected=${expectedHash}`);
 }
 
-const rawCountStmt = statement({ sqlText: `SELECT COUNT(*) total_raw FROM SILVER.surveys_clean` });
+const rawCountStmt = statement({ sqlText: `SELECT COUNT(*) total_raw FROM SILVER.impressions_clean` });
 const rawCountCursor = rawCountStmt.execute();
 rawCountCursor.next();
 const rawCount = rawCountCursor.getColumnValue('TOTAL_RAW');
 
-const aggSumStmt = statement({ sqlText: `SELECT SUM(response_count) total_agg FROM GOLD.agg_geo_sector_brand` });
+const aggSumStmt = statement({ sqlText: `SELECT SUM(impression_count) total_agg FROM GOLD.agg_geo_category_site` });
 const aggSumCursor = aggSumStmt.execute();
 aggSumCursor.next();
 const aggSum = aggSumCursor.getColumnValue('TOTAL_AGG');
@@ -67,5 +67,5 @@ if (rawCount !== aggSum) {
   throw new Error(`Aggregation integrity failed: raw=${rawCount}, aggregated=${aggSum}`);
 }
 
-return `test_pipeline PASSED (${aggSum} responses, hash ${actualHash})`;
+return `test_pipeline PASSED (${aggSum} impressions, hash ${actualHash})`;
 $$;
